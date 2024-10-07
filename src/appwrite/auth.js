@@ -21,12 +21,10 @@ export class AuthService {
         name
       );
       if (userAccount) {
-        // call another method
-        return this.logIn({ email, password });
-      } else {
-        return userAccount;
+        return this.logIn({ email, password }); // Directly return login attempt if account is created
       }
     } catch (error) {
+      console.error("Error creating account: ", error); // Better error handling
       throw error;
     }
   }
@@ -35,6 +33,8 @@ export class AuthService {
     try {
       return await this.account.createEmailSession(email, password);
     } catch (error) {
+      // console.error("Error logging in: ", error);
+      console.log("Appwrite serive :: getCurrentUser :: error", error);
       throw error;
     }
   }
@@ -43,16 +43,16 @@ export class AuthService {
     try {
       return await this.account.get();
     } catch (error) {
+      console.log("Appwrite serive :: getCurrentUser :: error", error);
       throw error;
     }
-    return null;
   }
 
   async logOut() {
     try {
       await this.account.deleteSessions();
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: logout :: error", error);
     }
   }
 }

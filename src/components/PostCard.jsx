@@ -1,7 +1,7 @@
 import appwriteService from "../appwrite/config";
 import { Link } from "react-router-dom";
 
-function PostCart({ $id, title, featuredImage }) {
+function PostCard({ $id, title, featuredImage }) {
   return (
     <Link to={`/post/${$id}`}>
       <div className="w-full bg-gray-100 rounded-xl p-4">
@@ -18,4 +18,4 @@ function PostCart({ $id, title, featuredImage }) {
   );
 }
 
-export default PostCart;
+export default PostCard;

@@ -29,9 +29,10 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: createPost :: error", error);
     }
   }
+
   async updatePost(slug, { title, content, featuredImage, status }) {
     try {
       return await this.databases.updateDocument(
@@ -46,9 +47,10 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: updatePost :: error", error);
     }
   }
+
   async deletePost(slug) {
     try {
       await this.databases.deleteDocument(
@@ -58,36 +60,38 @@ export class Service {
       );
       return true;
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: deletePost :: error", error);
       return false;
     }
   }
+
   async getPost(slug) {
     try {
-      await this.databases.getDocument(
+      return await this.databases.getDocument(
         conf.appwriteDataBaseId,
         conf.appwriteCollectionId,
         slug
       );
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: getPost :: error", error);
       return false;
     }
   }
+
   async getPosts(queries = [Query.equal("status", "active")]) {
     try {
-      await this.databases.listDocument(
+      return await this.databases.listDocuments(
         conf.appwriteDataBaseId,
         conf.appwriteCollectionId,
         queries
       );
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: getPosts :: error", error);
       return false;
     }
   }
 
-  // file uploadd service
+  // File upload service
 
   async uploadFile(file) {
     try {
@@ -97,23 +101,21 @@ export class Service {
         file
       );
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: uploadFile :: error", error);
       return false;
     }
   }
+
   async deleteFile(fileId) {
     try {
-      return await this.storage.deleteFile(
-        conf.appwriteBucketId,
-
-        fileId
-      );
+      await this.storage.deleteFile(conf.appwriteBucketId, fileId);
       return true;
     } catch (error) {
-      console.log("Appwrite serive :: logout :: error", error);
+      console.log("Appwrite service :: deleteFile :: error", error);
       return false;
     }
   }
+
   getFilePreview(fileId) {
     return this.storage.getFilePreview(conf.appwriteBucketId, fileId);
   }

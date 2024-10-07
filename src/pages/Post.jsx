@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import appwriteService from "../appwrite/config";
 import { Button, Container } from "../components";
@@ -15,21 +15,43 @@ export default function Post() {
   const isAuthor = post && userData ? post.userId === userData.$id : false;
 
   useEffect(() => {
-    if (slug) {
-      appwriteService.getPost(slug).then((post) => {
-        if (post) setPost(post);
-        else navigate("/");
-      });
-    } else navigate("/");
+    const fetchPost = async () => {
+      try {
+        if (slug) {
+          const fetchedPost = await appwriteService.getPost(slug);
+          if (fetchedPost) {
+            setPost(fetchedPost);
+          } else {
+            navigate("/");
+          }
+        } else {
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error fetching post:", error);
+        navigate("/"); // Redirect on error as well
+      }
+    };
+
+    fetchPost();
   }, [slug, navigate]);
 
-  const deletePost = () => {
-    appwriteService.deletePost(post.$id).then((status) => {
+  const deletePost = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const status = await appwriteService.deletePost(post.$id);
       if (status) {
-        appwriteService.deleteFile(post.featuredImage);
+        await appwriteService.deleteFile(post.featuredImage);
         navigate("/");
       }
-    });
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      // Optionally show a message to the user
+    }
   };
 
   return post ? (
